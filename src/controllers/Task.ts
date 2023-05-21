@@ -7,17 +7,18 @@ import { ITaskModel } from "../types/Task";
 const createTask = async (req: Request, res: Response): Promise<ITaskModel> => {
     try {
 
-        const { name,description,status } = req.body;
+        const { name, description, status, user } = req.body;
 
         const addingTask = new Task({
             _id: new mongoose.Types.ObjectId(),
             name,
             description,
-            status
+            status,
+            user
         });
         await addingTask.save();
         const allTasks: ITaskModel[] = await Task.find();
-        res.status(201).json({ message: "Task added", task: addingTask, allTasks: allTasks});
+        res.status(201).json({ message: "Task added", task: addingTask, allTasks: allTasks });
         return addingTask;
 
     } catch (error) {
@@ -80,7 +81,7 @@ const deleteTask = async (req: Request, res: Response): Promise<void> => {
         )
         const allTasks: ITaskModel[] = await Task.find()
         res.status(200).json({
-            message: "Todo deleted",
+            message: "Task deleted",
             task: deletedTask,
             tasks: allTasks,
         })

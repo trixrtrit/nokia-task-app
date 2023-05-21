@@ -3,12 +3,15 @@ import cors from "cors";
 import mongoose from "mongoose";
 import { error } from "console";
 import { config } from "./config/config";
-import router from "./routes/Task";
+import taskRoutes from "./routes/Task";
+import taskUsers from "./routes/User";
 
 const app = express()
 app.use(express.json());
+app.use(express.urlencoded({extended:true}));
 app.use(cors());
-app.use(router);
+app.use(taskRoutes);
+app.use(taskUsers);
 
 app.get("/",  (req, res) => {
     res.send("Hello World!");
