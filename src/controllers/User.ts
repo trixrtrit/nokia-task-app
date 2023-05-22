@@ -45,7 +45,7 @@ const getUsers = async (req: Request, res: Response) => {
 const getUser = async (req: Request, res: Response) => {
     try {
         const userId = req.params.userId;
-        const user = await User.findById(userId);
+        const user: IUserModel = await User.findById(userId);
         if (user != null) {
             res.status(200).json({ user });
             return user;
@@ -63,16 +63,18 @@ const updateUser = async (req: Request, res: Response) => {
     try {
         const { userId } = req.params;
         const req_body = req.body;
-        const {email} = req_body;
-        const invalidUserLen: number = (await User.find({_id: {$ne:userId}, email: email})).length
-        const user = await User.findById(userId);
+        const { email } = req_body;
+
+        //must find if there are any other users with the same email
+        const invalidUserLen: number = (await User.find({ _id: { $ne: userId }, email: email })).length
+        const user: IUserModel = await User.findById(userId);
         if (user && invalidUserLen == 0) {
-            const updatedUser = await user.updateOne(req_body);
+            const updatedUser: IUserModel = await user.updateOne(req_body);
             const allUsers: IUserModel[] = await User.find();
-            res.status(200).json({ updateUser, allUsers });
+            res.status(200).json({ updatedUser, allUsers });
             return user;
         }
-        else if(invalidUserLen > 0){
+        else if (invalidUserLen > 0) {
             res.status(400).json({ message: `A different user with the email: ${email} already exists` });
         }
         else {
@@ -92,7 +94,7 @@ const deleteUser = async (req: Request, res: Response) => {
         const allUsers: IUserModel[] = await User.find()
         res.status(200).json({
             message: "User deleted",
-            deleteUser,
+            deletedUser,
             allUsers
         })
     } catch (error) {

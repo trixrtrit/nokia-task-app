@@ -8,18 +8,17 @@ const createTask = async (req: Request, res: Response) => {
     try {
 
         const { name, description, status, user } = req.body;
-
-        const addingTask = new Task({
+        const newTask: ITaskModel = new Task({
             _id: new mongoose.Types.ObjectId(),
             name,
             description,
             status,
             user
         });
-        await addingTask.save();
+        await newTask.save();
         const allTasks: ITaskModel[] = await Task.find();
-        res.status(201).json({ message: "Task added", task: addingTask, allTasks: allTasks });
-        return addingTask;
+        res.status(201).json({ message: "Task added", task: newTask, allTasks: allTasks });
+        return newTask;
 
     } catch (error) {
         res.status(500).json({ message: "F", error: error });
@@ -52,14 +51,15 @@ const getUserTasks = async (req: Request, res: Response) => {
 const getTask = async (req: Request, res: Response) => {
     try {
         const taskId = req.params.taskId;
-        const task = await Task.findById(taskId);
-        if (task != null) {
+        const task: ITaskModel = await Task.findById(taskId);
+        if (task) {
             res.status(200).json({ task });
+            return task;
         }
         else {
             res.status(404).json({ message: `Task with id: ${taskId} not found` });
         }
-        return task;
+        
     } catch (error) {
         res.status(500).json({ error });
     }
@@ -70,11 +70,11 @@ const updateTask = async (req: Request, res: Response) => {
         const { taskId } = req.params;
         const req_body = req.body;
 
-        const task = await Task.findById(taskId);
+        const task: ITaskModel = await Task.findById(taskId);
         if (task) {
-            const updatedTask = await task.updateOne(req_body);
+            const updatedTask: ITaskModel = await task.updateOne(req_body);
             const alltasks: ITaskModel[] = await Task.find();
-            res.status(200).json({ task, alltasks });
+            res.status(200).json({ updatedTask, alltasks });
             return task;
         }
         else {
