@@ -5,7 +5,12 @@ const TaskSchema: Schema = new Schema(
     {
         name: { type: String, required: true },
         description: { type: String },
-        status: { type: String, required: true },
+        status: {
+            type: String,
+            enum: ['TODO', 'IN_PROGRESS', 'DONE'],
+            default: 'TODO',
+            required: true 
+            },
         user: {type: Schema.Types.ObjectId, ref: 'User'},
     },
     {

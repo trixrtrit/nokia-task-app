@@ -4,7 +4,7 @@ import Task from "../models/Task";
 import { ITaskModel } from "../types/Task";
 
 
-const createTask = async (req: Request, res: Response): Promise<ITaskModel> => {
+const createTask = async (req: Request, res: Response) => {
     try {
 
         const { name, description, status, user } = req.body;
@@ -26,7 +26,7 @@ const createTask = async (req: Request, res: Response): Promise<ITaskModel> => {
     }
 };
 
-const getTasks = async (req: Request, res: Response): Promise<ITaskModel[]> => {
+const getTasks = async (req: Request, res: Response) => {
     try {
         const tasks: ITaskModel[] = await Task.find();
         res.status(200).json({ tasks });
@@ -37,7 +37,19 @@ const getTasks = async (req: Request, res: Response): Promise<ITaskModel[]> => {
     }
 };
 
-const getTask = async (req: Request, res: Response): Promise<ITaskModel> => {
+const getUserTasks = async (req: Request, res: Response) => {
+    try {
+        const foreignUser = req.params.userId
+        const tasks: ITaskModel[] = await Task.find({ "user": foreignUser });
+        res.status(200).json({ tasks });
+        return tasks;
+
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+};
+
+const getTask = async (req: Request, res: Response) => {
     try {
         const taskId = req.params.taskId;
         const task = await Task.findById(taskId);
@@ -53,7 +65,7 @@ const getTask = async (req: Request, res: Response): Promise<ITaskModel> => {
     }
 }
 
-const updateTask = async (req: Request, res: Response): Promise<ITaskModel> => {
+const updateTask = async (req: Request, res: Response) => {
     try {
         const { taskId } = req.params;
         const req_body = req.body;
@@ -74,7 +86,7 @@ const updateTask = async (req: Request, res: Response): Promise<ITaskModel> => {
     }
 };
 
-const deleteTask = async (req: Request, res: Response): Promise<void> => {
+const deleteTask = async (req: Request, res: Response) => {
     try {
         const deletedTask: ITaskModel | null = await Task.findByIdAndRemove(
             req.params.taskId
@@ -90,4 +102,4 @@ const deleteTask = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
-export default { getTask, getTasks, createTask, updateTask, deleteTask };
+export default { getTask, getTasks, createTask, updateTask, deleteTask, getUserTasks };
