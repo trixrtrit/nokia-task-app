@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import User from "../models/User";
-import { IUserModel } from "types/User";
+import { IUserModel } from "types/user";
 
 
 const createUser = async (req: Request, res: Response) => {

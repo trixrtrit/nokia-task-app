@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "target": "es2022",
         "module": "NodeNext",
         "moduleResolution": "node",
         "baseUrl": "src",
