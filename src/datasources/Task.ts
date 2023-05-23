@@ -7,8 +7,7 @@ import { GraphQLError } from "graphql";
 
 export class TaskDataSource {
     private tasks: ITaskModel[];
-    private users: any;
-    private user: IUserModel;
+    private task: ITaskModel;
     private db_connection: mongoose.Connection;
 
     constructor(dbConnection: mongoose.Connection) {
@@ -21,61 +20,62 @@ export class TaskDataSource {
     }
 
     async getTasksByUser(id: string) {
-        this.tasks = await Task.find({"user": id});
+        this.tasks = await Task.find({ "user": id });
         return this.tasks;
     }
     async createTask(name: string, description: string, status: string, user: string) {
         try {
-            newUser = new User({
+            const newTask: ITaskModel = new Task({
                 _id: new mongoose.Types.ObjectId(),
                 name,
-                email,
+                description,
+                status,
+                user
             });
-            await newUser.save();
-            return newUser;
+            await newTask.save();
+            return newTask;
         } catch (error) {
-            throw new GraphQLError('Failed to create user.', {
+            throw new GraphQLError('Failed to create task.', {
                 extensions: { code: 'INTERNAL_SERVER_ERROR' },
             });
         }
     }
 
-    async updateUser(id: string, name: string, email: string) {
+    async updateTask(id: string, name: string, description: string, status: string, user: string) {
         try {
-            const invalidUserLen: number = await User.countDocuments({ _id: { $ne: id }, email: email });
-            if (invalidUserLen > 0) {
-                throw new GraphQLError(`User with email: ${email} already exists`, {
-                    extensions: { code: 'BAD_USER_INPUT' },
+            let updatedTask: ITaskModel = await Task.findById(id);
+            if (updatedTask) {
+                await updatedTask.updateOne({$set: 
+                    {name: name || updatedTask.name,
+                    description: description || updatedTask.description,
+                    status: status || updatedTask.status,
+                    user: user || updatedTask.user}
                 });
+                this.task = updatedTask;
+                return updatedTask;
             }
-            let updatedUser: IUserModel = await User.findById(id);
-            if (updatedUser) {
-                await updatedUser.updateOne({ name: name, email: email });
-                this.user = updatedUser;
-                return this.user;
-            }
-            throw new GraphQLError(`User with id: ${id} does not exist`, {
+            throw new GraphQLError(`Task with id: ${id} does not exist`, {
                 extensions: { code: 'BAD_USER_INPUT' },
             });
         } catch (error) {
-            throw new GraphQLError('Failed to update user.', {
+            throw new GraphQLError('Failed to update task.', {
                 extensions: { code: 'INTERNAL_SERVER_ERROR' },
             });
         }
     }
-    async deleteUser(id: string) {
+    async deleteTask(id: string) {
         try {
-            const deletedUser: IUserModel | null = await User.findByIdAndDelete(id);
+            const deletedTask: IUserModel | null = await Task.findByIdAndDelete(id);
 
-            if (!deletedUser) {
-                throw new GraphQLError(`User with id: ${id} does not exist`, {
+            if (!deletedTask) {
+                throw new GraphQLError(`Task with id: ${id} does not exist`, {
                     extensions: { code: 'BAD_USER_INPUT' },
                 });
             }
 
-            return deletedUser;
+            return deletedTask;
         } catch (error) {
-            throw new GraphQLError('Failed to delete user.', {
+            throw new GraphQLError('Failed to delete Task.', {
                 extensions: { code: 'INTERNAL_SERVER_ERROR' },
             });
         }

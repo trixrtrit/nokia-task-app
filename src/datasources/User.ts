@@ -61,7 +61,10 @@ export class UserDataSource {
             }
             let updatedUser: IUserModel = await User.findById(id);
             if (updatedUser) {
-                await updatedUser.updateOne({ name: name, email: email });
+                await updatedUser.updateOne({
+                    name: name || updatedUser.name,
+                    email: email || updatedUser.email
+                });
                 this.user = updatedUser;
                 return this.user;
             }

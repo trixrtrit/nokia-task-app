@@ -65,7 +65,7 @@ export const resolvers = {
     createTask: async (_: any, { name, description, status, user }:
       { name: string, email: string, description: string, status: string, user: string }) => {
       try {
-        const newTask = await userDataSource.createTask(name, description, status, user);
+        const newTask = await taskDataSource.createTask(name, description, status, user);
         return newTask;
       } catch (error) {
         throw new Error(error.message);
