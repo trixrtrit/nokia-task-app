@@ -4,7 +4,6 @@ import { typeDefs } from "./graphql-files/schema";
 import { resolvers } from "./graphql-files/resolvers";
 import express from "express";
 import cors from "cors";
-import mongoose from "mongoose";
 import { config } from "./config/config";
 import taskRoutes from "./routes/Task";
 import taskUsers from "./routes/User";
@@ -43,8 +42,11 @@ async function startApolloServer() {
   app.listen(config.server.port, () => {
     console.log(`Server listening on port ${config.server.port}!`);
   });
+
+  return { app, apolloServer };
 }
 
 startApolloServer().catch((error) => {
   console.error(error);
 });
+export default startApolloServer;

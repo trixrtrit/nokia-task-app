@@ -18,6 +18,23 @@ export class TaskDataSource {
         this.tasks = await Task.find()
         return this.tasks;
     }
+    async getTask(id: string) {
+        try {
+            const task: IUserModel | null = await Task.findById(id);
+ 
+            if (!task) {
+                throw new GraphQLError(`Task with id: ${id} does not exist`, {
+                    extensions: { code: 'BAD_USER_INPUT' },
+                });
+            }
+
+            return task;
+        } catch (error) {
+            throw new GraphQLError(`Task with id: ${id} does not exist`, {
+                extensions: { code: 'BAD_USER_INPUT' },
+            });
+        }
+    }
 
     async getTasksByUser(id: string) {
         this.tasks = await Task.find({ "user": id });
@@ -45,11 +62,14 @@ export class TaskDataSource {
         try {
             let updatedTask: ITaskModel = await Task.findById(id);
             if (updatedTask) {
-                await updatedTask.updateOne({$set: 
-                    {name: name || updatedTask.name,
-                    description: description || updatedTask.description,
-                    status: status || updatedTask.status,
-                    user: user || updatedTask.user}
+                await updatedTask.updateOne({
+                    $set:
+                    {
+                        name: name || updatedTask.name,
+                        description: description || updatedTask.description,
+                        status: status || updatedTask.status,
+                        user: user || updatedTask.user
+                    }
                 });
                 this.task = updatedTask;
                 return updatedTask;

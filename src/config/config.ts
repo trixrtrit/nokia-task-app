@@ -1,4 +1,4 @@
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 dotenv.config()
 
 const SERVER_PORT: string | number = process.env.PORT || 3000;

@@ -26,6 +26,7 @@ export const typeDefs = gql`
       getUsers: [User]
       getTasks: [Task]
       getUser(_id: ID!): User
+      getTask(_id: ID!): Task
       getUserTasks(user: ID!): [Task]
     }
 

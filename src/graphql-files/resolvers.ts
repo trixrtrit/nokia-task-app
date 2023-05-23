@@ -1,6 +1,3 @@
-import mongoose from "mongoose";
-import User from "../models/User";
-import Task from "../models/Task";
 import { UserDataSource } from "../datasources/User";
 import { TaskDataSource } from "../datasources/Task";
 import dbConnection from "../db/connection/connection";
@@ -18,6 +15,14 @@ export const resolvers = {
     getTasks: async () => {
       const allTasks = await taskDataSource.getTasks();
       return allTasks;
+    },
+    getTask: async (_: any, { _id }: { _id: string }) => {
+      try {
+        const task = await taskDataSource.getTask(_id);
+        return task;
+      } catch (error) {
+        throw new Error(error.message);
+      }
     },
     getUser: async (_: any, { _id }: { _id: string }) => {
       try {

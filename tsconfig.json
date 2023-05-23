@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "esModuleInterop": true,
         "target": "es2022",
         "module": "NodeNext",
         "moduleResolution": "node",
@@ -8,5 +9,5 @@
         "sourceMap": true,
         "noImplicitAny": true,
     },
-    "include": ["src/**/*"],
+    "include": ["src/**/*", "tests"],
 }
