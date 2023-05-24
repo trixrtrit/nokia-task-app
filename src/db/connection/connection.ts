@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import { config } from "../../config/config";
 
 
-const dbConnection = () => {
+const dbConnection = (): {conn: mongoose.Connection} => {
     try {
         mongoose.connect(config.mongo.url, {
             retryWrites: true,
@@ -11,10 +11,10 @@ const dbConnection = () => {
         });
         const db = mongoose.connection;
         console.log("Connected to Mongo Cluster");
-        return db;
+        return {conn: db};
     } catch (error) {
         console.log(`Unable to connect due to: ${error}`);
     }
 }
 
-export default dbConnection;
+export default dbConnection().conn;

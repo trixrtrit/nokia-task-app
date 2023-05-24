@@ -3,8 +3,8 @@ import { TaskDataSource } from "../datasources/Task";
 import dbConnection from "../db/connection/connection";
 import { GraphQLError } from "graphql";
 
-let userDataSource = new UserDataSource(dbConnection());
-let taskDataSource = new TaskDataSource(dbConnection());
+let userDataSource = new UserDataSource(dbConnection);
+let taskDataSource = new TaskDataSource(dbConnection);
 
 export const resolvers = {
   Query: {
