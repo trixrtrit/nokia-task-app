@@ -7,14 +7,12 @@ import cors from "cors";
 import { config } from "./config/config";
 import taskRoutes from "./routes/Task";
 import taskUsers from "./routes/User";
-import dbConnection from "./db/connection/connection";
 
 interface MyContext {
   token?: String;
 }
 
 async function startApolloServer() {
-  await dbConnection();
   const app = express();
   const apolloServer = new ApolloServer<MyContext>({
     typeDefs,

@@ -2,23 +2,25 @@ import { UserDataSource } from "../datasources/User";
 import { TaskDataSource } from "../datasources/Task";
 import dbConnection from "../db/connection/connection";
 import { GraphQLError } from "graphql";
+import User from "../models/User";
+import Task from "../models/Task";
 
-let userDataSource = new UserDataSource(dbConnection);
-let taskDataSource = new TaskDataSource(dbConnection);
+let userDataSource = new UserDataSource(dbConnection, User);
+let taskDataSource = new TaskDataSource(dbConnection, Task);
 
 export const resolvers = {
   Query: {
     getUsers: async () => {
-      const allUsers = await userDataSource.getUsers();
+      const allUsers = await userDataSource.getModels();
       return allUsers;
     },
     getTasks: async () => {
-      const allTasks = await taskDataSource.getTasks();
+      const allTasks = await taskDataSource.getModels();
       return allTasks;
     },
     getTask: async (_: any, { _id }: { _id: string }) => {
       try {
-        const task = await taskDataSource.getTask(_id);
+        const task = await taskDataSource.getModel(_id);
         return task;
       } catch (error) {
         throw new Error(error.message);
@@ -26,7 +28,7 @@ export const resolvers = {
     },
     getUser: async (_: any, { _id }: { _id: string }) => {
       try {
-        const user = await userDataSource.getUser(_id);
+        const user = await userDataSource.getModel(_id);
         if (user) {
           return user;
         }
@@ -61,7 +63,7 @@ export const resolvers = {
     },
     deleteUser: async (_: any, { _id }: { _id: string }) => {
       try {
-        const deletedUser = await userDataSource.deleteUser(_id);
+        const deletedUser = await userDataSource.deleteModel(_id);
         return deletedUser;
       } catch (error) {
         throw new Error(error.message);
@@ -87,7 +89,7 @@ export const resolvers = {
     },
     deleteTask: async (_: any, { _id }: { _id: string }) => {
       try {
-        const deletedTask = await taskDataSource.deleteTask(_id);
+        const deletedTask = await taskDataSource.deleteModel(_id);
         return deletedTask;
       } catch (error) {
         throw new Error(error.message);
