@@ -14,7 +14,7 @@ export class TaskDataSource extends DataBaseSource {
     }
 
     async getTasksByUser(id: string) {
-        const tasks: ITaskModel[] | null = await this.task.find({ "user": id });
+        const tasks: ITaskModel[] | null = await Task.find({ "user": id });
         return tasks;
     }
     async createTask(name: string, description: string, status: string, user: string) {
@@ -35,7 +35,7 @@ export class TaskDataSource extends DataBaseSource {
         }
     }
 
-    async updateTask(id: string, name: string, description: string, status: string, user: string) {
+    async updateTask(id: string, name?: string, description?: string, status?: string, user?: string) {
         try {
             let updatedTask: ITaskModel | null = await this.task.findById(id);
             if (updatedTask) {
@@ -47,7 +47,7 @@ export class TaskDataSource extends DataBaseSource {
                         status: status || updatedTask.status,
                         user: user || updatedTask.user
                     }
-                });
+                },{new: true});
                 return updatedTask;
             }
             throw new GraphQLError(`Task with id: ${id} does not exist`, {
@@ -67,4 +67,6 @@ export class TaskDataSource extends DataBaseSource {
             }
         }
     }
+
+    
 }

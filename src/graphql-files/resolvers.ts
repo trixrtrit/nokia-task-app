@@ -95,5 +95,13 @@ export const resolvers = {
         throw new Error(error.message);
       }
     },
+    assignTask: async (_: any, { _id, user }: { _id: string, user: string }) => {
+      try {
+        const updatedTask = await taskDataSource.updateTask(_id, _, _, _, user);
+        return updatedTask;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    }
   }
 }

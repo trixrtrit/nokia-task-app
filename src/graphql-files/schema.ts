@@ -37,5 +37,6 @@ export const typeDefs = gql`
       createTask(name: String!, description: String, status: taskProgress): Task
       updateTask(_id: ID!, name: String, description: String, status: taskProgress, user: ID): Task
       deleteTask(_id: ID!): Task
+      assignTask(_id: ID!, user: ID!): Task
     }
   `;
