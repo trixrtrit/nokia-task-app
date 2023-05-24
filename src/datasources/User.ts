@@ -13,7 +13,7 @@ export class UserDataSource extends DataBaseSource {
         this.user = model
     }
 
-    async createUser(name: string, email: string) {
+    async createUser(name: string, email: string): Promise<IUserModel> {
         try {
             let newUser: IUserModel | null = await this.user.findOne({ email: email });
             if (newUser) {
@@ -46,7 +46,7 @@ export class UserDataSource extends DataBaseSource {
     //first check if user exists to update
     //then check if email is already registered
     //if both conditions pass, update the user
-    async updateUser(id: string, name: string, email: string) {
+    async updateUser(id: string, name: string, email: string): Promise<IUserModel> {
         try {
             let updatedUser: IUserModel = await this.user.findById(id);
             if (updatedUser) {

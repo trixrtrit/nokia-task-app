@@ -13,11 +13,11 @@ export class TaskDataSource extends DataBaseSource {
         this.task = model;
     }
 
-    async getTasksByUser(id: string) {
+    async getTasksByUser(id: string): Promise<ITaskModel[]> {
         const tasks: ITaskModel[] | null = await Task.find({ "user": id });
         return tasks;
     }
-    async createTask(name: string, description: string, status: string, user: string) {
+    async createTask(name: string, description: string, status: string, user: string): Promise<ITaskModel> {
         try {
             const newTask: ITaskModel = new Task({
                 _id: new mongoose.Types.ObjectId(),
@@ -35,7 +35,7 @@ export class TaskDataSource extends DataBaseSource {
         }
     }
 
-    async updateTask(id: string, name?: string, description?: string, status?: string, user?: string) {
+    async updateTask(id: string, name?: string, description?: string, status?: string, user?: string): Promise<ITaskModel> {
         try {
             let updatedTask: ITaskModel | null = await this.task.findById(id);
             if (updatedTask) {

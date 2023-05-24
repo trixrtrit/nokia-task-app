@@ -1,5 +1,5 @@
 import { GraphQLError } from "graphql";
-import mongoose from "mongoose";
+import mongoose, { Model } from "mongoose";
 import { ApolloServerErrorCode } from '@apollo/server/errors';
 
 export class DataBaseSource {
@@ -12,9 +12,9 @@ export class DataBaseSource {
         this.model = model;
     }
 
-    async getModels() {
+    async getModels(): Promise<mongoose.Model<any>[]> {
         try {
-            const models: mongoose.Model<any>[] = await this.model.find()
+            const models: mongoose.Model<any>[] | null = await this.model.find()
             return models;
         }
         catch (error) {
@@ -24,7 +24,7 @@ export class DataBaseSource {
         }
     }
 
-    async getModel(id: string) {
+    async getModel(id: string): Promise<mongoose.Model<any>> {
         try {
             const singleModel: mongoose.Model<any> | null = await this.model.findById(id);
 
@@ -44,7 +44,7 @@ export class DataBaseSource {
         }
     }
 
-    async deleteModel(id: string) {
+    async deleteModel(id: string): Promise<mongoose.Model<any>> {
         try {
             const deletedModel: mongoose.Model<any> | null = await this.model.findByIdAndDelete(id);
 
