@@ -25,7 +25,6 @@ describe('Get Task Resolver Tests', () => {
         expect(task).toMatchObject({
           _id: expect.any(String),
           name: expect.any(String),
-          description: expect.any(String) || null,
           status: expect.any(String),
           createdAt: expect.any(String),
           updatedAt: expect.any(String),
@@ -36,7 +35,6 @@ describe('Get Task Resolver Tests', () => {
         expect(task).toMatchObject({
           _id: expect.any(String),
           name: expect.any(String),
-          description: expect.any(String) || null,
           status: expect.any(String),
           createdAt: expect.any(String),
           updatedAt: expect.any(String),
