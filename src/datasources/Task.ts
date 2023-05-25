@@ -39,11 +39,20 @@ export class TaskDataSource extends DataBaseSource {
    * @param description The description of the task.
    * @param status The status of the task.
    * @param user The ID of the user that will be assigned with the created task (optional).
+   * The user must exist so that a task is assigned to him
    * @returns A promise that resolves to the created task.
    * @throws GraphQLError if there is an error while creating the task.
    */
     async createTask(name: string, description: string, status: string, user?: string): Promise<ITaskModel> {
         try {
+            if(user){
+                const userDocs: number = await this.db.model('User').countDocuments({_id: user});
+                if(userDocs == 0){
+                    throw new GraphQLError(`User with id: ${user} does not exist`, {
+                        extensions: { code: 'BAD_USER_INPUT' },
+                    });
+                }
+            }
             const newTask: ITaskModel = new Task({
                 _id: new mongoose.Types.ObjectId(),
                 name,
@@ -54,9 +63,17 @@ export class TaskDataSource extends DataBaseSource {
             await newTask.save();
             return newTask;
         } catch (error) {
-            throw new GraphQLError('Failed to create task.', {
-                extensions: { code: 'INTERNAL_SERVER_ERROR' },
-            });
+            if (error.extensions?.code == ApolloServerErrorCode.BAD_USER_INPUT) {
+                console.error(`${error.message}`);
+
+                throw new GraphQLError(error.message, {
+                    extensions: { code: error.extensions.code },
+                });
+            } else {
+                throw new GraphQLError('Failed to create task.', {
+                    extensions: { code: 'INTERNAL_SERVER_ERROR' },
+                });
+            }
         }
     }
 

@@ -34,7 +34,7 @@ export const typeDefs = gql`
       createUser(name: String!, email: String!): User
       updateUser(_id: ID!, name: String, email: String): User
       deleteUser(_id: ID!): User
-      createTask(name: String!, description: String, status: taskProgress): Task
+      createTask(name: String!, description: String, status: taskProgress, user: ID): Task
       updateTask(_id: ID!, name: String, description: String, status: taskProgress, user: ID): Task
       deleteTask(_id: ID!): Task
       assignTask(_id: ID!, user: ID!): Task
