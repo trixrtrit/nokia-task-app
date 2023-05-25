@@ -5,8 +5,6 @@ import { resolvers } from "./graphql-files/resolvers";
 import express from "express";
 import cors from "cors";
 import { config } from "./config/config";
-import taskRoutes from "./routes/Task";
-import taskUsers from "./routes/User";
 
 interface MyContext {
   token?: String;
@@ -26,8 +24,6 @@ async function startApolloServer() {
     express.json(),
     express.urlencoded({ extended: true }),
     cors(),
-    taskRoutes,
-    taskUsers,
     expressMiddleware(apolloServer, {
       context: async ({ req }) => ({ token: req.headers.token }),
     })

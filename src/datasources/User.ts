@@ -5,6 +5,12 @@ import { GraphQLError } from "graphql";
 import { DataBaseSource } from "./DataBaseSource";
 import { ApolloServerErrorCode } from '@apollo/server/errors';
 
+/**
+ * UserDataSource is a class that provides data access methods for users.
+ * It extends the DataBaseSource class.
+ * The attribute user represents the user model used for querying the user collection.
+ */
+
 export class UserDataSource extends DataBaseSource {
     private user: mongoose.Model<IUserModel>;
 
@@ -13,6 +19,13 @@ export class UserDataSource extends DataBaseSource {
         this.user = model
     }
 
+    /**
+   * Creates a new user.
+   * @param name The name of the user.
+   * @param email The email of the user.
+   * @returns A promise that resolves to the created user.
+   * @throws GraphQLError if the user with the given email already exists, or if there is an error while creating the user.
+   */
     async createUser(name: string, email: string): Promise<IUserModel> {
         try {
             let newUser: IUserModel | null = await this.user.findOne({ email: email });
@@ -43,9 +56,17 @@ export class UserDataSource extends DataBaseSource {
         }
     }
 
-    //first check if user exists to update
-    //then check if email is already registered
-    //if both conditions pass, update the user
+    /**
+   * Updates an existing user with new values.
+   * first check if user exists to update, then check if email is already registered
+   * if both conditions pass, update the user
+   * @param id The ID of the user to update.
+   * @param name The new name of the user.
+   * @param email The new email of the user.
+   * @returns A promise that resolves to the updated user model.
+   * @throws GraphQLError if the user with the given ID does not exist, 
+   * the new email is already registered to another user, or there is an error while updating the user.
+   */
     async updateUser(id: string, name: string, email: string): Promise<IUserModel> {
         try {
             let updatedUser: IUserModel = await this.user.findById(id);
